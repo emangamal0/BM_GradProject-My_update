@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -55,10 +56,10 @@ import com.example.currencyconverter.ui.CurrencyViewModel
 
 @Preview
 @Composable
-fun FavoriteScreen (viewModel :CurrencyViewModel = viewModel() ){
+fun FavoriteScreen(viewModel: CurrencyViewModel = viewModel()) {
 
-    var showDialog by rememberSaveable {mutableStateOf(false)}
-    var addToList: Boolean by rememberSaveable{mutableStateOf(false)}
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var addToList: Boolean by rememberSaveable { mutableStateOf(false) }
     val favList = viewModel.remoteCurrencies.observeAsState()
 
     Box {
@@ -73,10 +74,12 @@ fun FavoriteScreen (viewModel :CurrencyViewModel = viewModel() ){
                     style = TextStyle(fontWeight = FontWeight.Companion.Bold, fontSize = 15.sp)
                 )
                 Spacer(modifier = Modifier.width(10.dp))
-                Button(onClick = {showDialog = true},
+                Button(
+                    onClick = { showDialog = true },
                     modifier = Modifier.padding(end = 30.dp),
                     border = (BorderStroke(1.dp, Color.Black)),
-                    colors = ButtonDefaults.buttonColors(Color.White)) {
+                    colors = ButtonDefaults.buttonColors(Color.White)
+                ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_plus_icon),
                         contentDescription = "",
@@ -100,25 +103,26 @@ fun FavoriteScreen (viewModel :CurrencyViewModel = viewModel() ){
                     .padding(start = 30.dp),
                 style = TextStyle(fontFamily = FontFamily.Serif, fontSize = 20.sp)
             )
+
             Spacer(modifier = Modifier.height(10.dp))
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White)
                     .padding(start = 30.dp)
             ) {
-                Column (modifier = Modifier.fillMaxHeight()){
-                    favList.value?.filter{it.isFavourite}?.forEach{
-                        AddList(item = it)
+                Column(modifier = Modifier.fillMaxHeight()) {
+                    favList.value?.filter { it.isFavourite }?.forEach {
+                            AddList(item = it)
                     }
-//                    if (addToList){
-//                        AddList()
-//                    }
+
                 }
             }
         }
+
         if (showDialog) {
-            Dialog(onDismissRequest = {showDialog = false}) {//column card cotain text lazy
+            Dialog(onDismissRequest = { showDialog = false }) {//column card cotain text lazy
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -127,7 +131,8 @@ fun FavoriteScreen (viewModel :CurrencyViewModel = viewModel() ){
                     horizontalAlignment = Alignment.End
                 ) {
                     Row {
-                        IconButton(onClick = {showDialog = false},
+                        IconButton(
+                            onClick = { showDialog = false },
                             colors = IconButtonDefaults.iconButtonColors(Color.White),
                             modifier = Modifier
                                 .size(50.dp)
@@ -150,23 +155,25 @@ fun FavoriteScreen (viewModel :CurrencyViewModel = viewModel() ){
                             text = "My  Favorites",
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(start = 10.dp)
                                 .background(Color.White)
                         )
+
                         LazyColumn(modifier = Modifier.background(color = Color.White)) {
-                            itemsIndexed(favList.value?: listOf()) { index, item ->
-                                var checkBox: Boolean by rememberSaveable{mutableStateOf(item.isFavourite)}
-                                Row {
+                            itemsIndexed(favList.value ?: listOf()) { index, item ->
+                                var checkBox: Boolean by rememberSaveable { mutableStateOf(item.isFavourite) }
+                                Row(modifier = Modifier.padding(end = 20.dp)) {
                                     AddList(item)
                                     Checkbox(
                                         checked = checkBox,
                                         onCheckedChange = {
                                             checkBox = it
-                                           viewModel.saveItemInDB(item,it)
-//                                           addToList = true
-                                            // if (it)
-                                            // viewmodel.savedatabase(item)
-                                            // else
-                                           // viewmodel.remvoedatabase(item)
+                                            viewModel.saveItemInDB(item, it)
+//                                            addToList = true
+//                                             if (it)
+//                                             viewModel.saveItemInDB(item, it)
+//                                             else
+//                                             viewModel.remvoedatabase(item)
                                         },
                                         modifier = Modifier
                                             .size(30.dp)
@@ -192,11 +199,12 @@ fun FavoriteScreen (viewModel :CurrencyViewModel = viewModel() ){
 }
 
 @Composable
-fun AddList (item: CachedCurrency) {
+fun AddList(item: CachedCurrency) {
     Row(
-        modifier = Modifier, verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.padding(start = 10.dp), verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(model = Uri.parse(item.flagUrl) , contentDescription = "",
+        AsyncImage(
+            model = Uri.parse(item.flagUrl), contentDescription = "",
             modifier = Modifier
                 .width(30.dp)
                 .height(30.dp)
@@ -205,7 +213,7 @@ fun AddList (item: CachedCurrency) {
         Spacer(modifier = Modifier.width(20.dp))
         Column(Modifier.weight(1F)) {
             Text(text = item.code)
-            Text(text =item.desc, color = Color.LightGray)
+            Text(text = item.desc, color = Color.LightGray)
         }
     }
 }

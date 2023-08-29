@@ -1,6 +1,5 @@
 package com.example.currencyconverter.ui
 
-
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -25,13 +24,31 @@ class CurrencyViewModel() : ViewModel() {
     private val _state = mutableStateOf(DropDownState())
     val state: State<DropDownState> = _state
 
+    private val _state2 = mutableStateOf(DropDownState())
+    val state2: State<DropDownState> = _state2
+
+    private val _state3 = mutableStateOf(DropDownState())
+    val state3: State<DropDownState> = _state3
+
+    private val _state4 = mutableStateOf(DropDownState())
+    val state4: State<DropDownState> = _state4
+
+    private val _state5 = mutableStateOf(DropDownState())
+    val state5: State<DropDownState> = _state5
+
 
     private val currencyDao = CurrencyDatabase.getInstance(AppContext.appContext).currencyDao()
     private val currencyRepository: CurrencyRepository = CurrencyRepositoryImpl(currencyDao)
+
     private val _remoteCurrencies = MutableLiveData<List<CachedCurrency>>()
     val remoteCurrencies: LiveData<List<CachedCurrency>> = _remoteCurrencies
+
     private val _conversionState = MutableLiveData<Double>()
     val conversionState: LiveData<Double> = _conversionState
+
+    private val _compareState = MutableLiveData<Double>()
+    val compareState: LiveData<Double> = _compareState
+
     lateinit var  cachedCurrencies : List<CachedCurrency>
     init {
         viewModelScope.launch {
@@ -50,7 +67,7 @@ class CurrencyViewModel() : ViewModel() {
             _remoteCurrencies.postValue(cachedCurrencies)
             currencyRepository.insertCurrencies(cachedCurrencies)
 
-            Log.d("CurrencyViewModel", "Remote Data: $cachedCurrencies")
+            Log.d("CurrencyViewModelSuccess", "Remote Data: $cachedCurrencies")
         } catch (e: Exception) {
             Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
 
@@ -75,17 +92,28 @@ class CurrencyViewModel() : ViewModel() {
 
     }
 
-   suspend fun convert(from : String, to: String, amount: Double){
+    suspend fun convert(from : String, to: String, amount: Double){
         try {
             val apiService = RetrofitClient.createService(ApiService::class.java)
             val conversionResult = apiService.getConversionResult(from, to , amount)
             val result = conversionResult.value
             _conversionState.postValue(result)
             Log.d("eman", result.toString())
-
         }catch (e: Exception) {
             Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
 
+        }
+    }
+
+    suspend fun compare(from : String, to: List<String> , amount: Double){
+        try {
+            val apiService = RetrofitClient.createService(ApiService::class.java)
+            val compareResult = apiService.getCompareResult(from , to ,amount)
+            val result = compareResult.value
+            _compareState.postValue(result)
+            Log.d("eman", result.toString())
+        }catch (e: Exception) {
+            Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
         }
     }
 
@@ -95,12 +123,39 @@ class CurrencyViewModel() : ViewModel() {
                 viewModelScope.launch {
                     convert(event.from, event.to, event.amount)
                 }
-
             }
+            is Event.Compare -> {
+                viewModelScope.launch {
+                    compare(event.from, event.to, event.amount)
+                }
+            }
+
         }
     }
 
-    fun setDropDownState(selectedCurrencyIndex: String= "") {
-        _state.value = DropDownState(selectedCurrencyIndex)
+    fun setDropDownState(selectedCurrencyIndex: String= "" , num : Int) {
+        when(num){
+            1 -> {
+                _state.value = DropDownState(selectedCurrencyIndex) //from convert
+            }
+            2 -> {
+                _state2.value = DropDownState(selectedCurrencyIndex) //to convert
+            }
+
+            3 ->{
+                _state3.value = DropDownState(selectedCurrencyIndex) // from compare
+            }
+
+            4 ->{
+                _state4.value = DropDownState(selectedCurrencyIndex) // target 1
+            }
+
+            5 ->{
+            _state5.value = DropDownState(selectedCurrencyIndex) // target 2
+        }
+
+
+        }
     }
+
 }

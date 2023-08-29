@@ -39,10 +39,11 @@ import com.example.currencyconverter.ui.CurrencyViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun ConvertCard(viewModel : CurrencyViewModel = viewModel()) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun ConvertCard(viewModel: CurrencyViewModel = viewModel()) {
 
-    val result = viewModel.remoteCurrencies.observeAsState()
+    var amountConvert by remember { mutableStateOf(TextFieldValue("")) }
+    val textConversionRes by viewModel.conversionState.observeAsState(0.0)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,9 +85,9 @@ fun ConvertCard(viewModel : CurrencyViewModel = viewModel()) {
 
 
             TextField(
-                value = text,
+                value = amountConvert,
                 onValueChange = { newText ->
-                    text = newText
+                    amountConvert = newText
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 singleLine = true,
@@ -97,7 +98,7 @@ fun ConvertCard(viewModel : CurrencyViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            CurrencyDropdown(Modifier.weight(1f))
+            CurrencyDropdown(Modifier.weight(1f), num = 1)
 
         }
 
@@ -133,29 +134,39 @@ fun ConvertCard(viewModel : CurrencyViewModel = viewModel()) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CurrencyDropdown(modifier = Modifier.weight(1f) )
+            CurrencyDropdown(modifier = Modifier.weight(1f), num = 2)
 
             Spacer(modifier = Modifier.width(10.dp))
 
-                Text(
-                    text = "", style = TextStyle(
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    ), modifier = Modifier
-                        .weight(1f)
-                        .border(
-                            2.dp,
-                            MaterialTheme.colorScheme.inverseOnSurface,
-                            shape = CircleShape
-                        )
-                        .padding(16.dp)
-                        .weight(1f)
-                )
-            }
+            Text(
+                text = "${textConversionRes}", style = TextStyle(
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                ), modifier = Modifier
+                    .weight(1f)
+                    .border(
+                        2.dp,
+                        MaterialTheme.colorScheme.inverseOnSurface,
+                        shape = CircleShape
+                    )
+                    .padding(16.dp)
+                    .weight(1f)
+            )
+
+        }
 
 
         Button(
-            onClick = {  viewModel.onEvent(Event.Convert(amount= text.text.toDouble(), from=viewModel.state.value.selectedCurrencyIndex, to= "")) },
+            onClick = {
+                viewModel.onEvent(
+                    Event.Convert(
+                        amount = amountConvert.text.toDouble(),
+                        from = viewModel.state.value.selectedCurrencyIndex,
+                        to = viewModel.state2.value.selectedCurrencyIndex
+                    )
+                )
+
+            },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
             modifier = Modifier
                 .fillMaxWidth()

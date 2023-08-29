@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
@@ -34,16 +37,9 @@ import coil.compose.AsyncImage
 import com.example.currencyconverter.R
 import com.example.currencyconverter.ui.CurrencyViewModel
 
-data class CurrencyItem(val currencyCode: String, @DrawableRes val flagResId: Int)
-
 @Composable
-fun CurrencyDropdown(modifier: Modifier, viewModel: CurrencyViewModel = viewModel()) {
+fun CurrencyDropdown(modifier: Modifier, viewModel: CurrencyViewModel = viewModel(), num: Int) {
 
-//    val currencies =  listOf(
-//        CurrencyItem("USD", R.drawable.ic_united_states_of_america),
-//        CurrencyItem("EUR", R.drawable.ic_united_kingdom),
-//        CurrencyItem("JPY", R.drawable.ic_japan),
-//    )
 
     val list = viewModel.remoteCurrencies.observeAsState()
 
@@ -58,7 +54,8 @@ fun CurrencyDropdown(modifier: Modifier, viewModel: CurrencyViewModel = viewMode
             .wrapContentSize(Alignment.TopStart)
     ) {
         Column(
-            Modifier.clickable { expanded = !expanded }
+            Modifier
+                .clickable { expanded = !expanded }
         ) {
             Row(
                 modifier = Modifier
@@ -91,25 +88,25 @@ fun CurrencyDropdown(modifier: Modifier, viewModel: CurrencyViewModel = viewMode
                         onClick = {
                             selectedCurrencyIndex = index
                             expanded = false
+                            viewModel.setDropDownState(cachedCurrency.code, num)
                         },
-                        modifier = Modifier.padding(horizontal = 16.dp), text = {
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-
                                 AsyncImage(
-                                    model = Uri.parse(selectedCurrency?.flagUrl ?: ""),
+                                    model = Uri.parse(cachedCurrency.flagUrl),
                                     contentDescription = "",
                                     modifier = Modifier
                                         .size(24.dp)
                                         .padding(end = 8.dp)
                                 )
-                                selectedCurrency?.let { Text(text = it.code)
-                                    viewModel.setDropDownState(it.code)
-                                }
-
+                                Text(text = cachedCurrency.code)
                             }
-                        })
+                        }
+                    )
                 }
             }
+
         }
     }
 }
