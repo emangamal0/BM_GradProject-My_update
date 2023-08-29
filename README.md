@@ -6,7 +6,7 @@ ConCurrency and Check live foreign currency exchange rates
  
 # Features 
 
--Currency Conversion
+- Currency Conversion
  
 - Real-Time Exchange Rates
  
@@ -18,21 +18,14 @@ ConCurrency and Check live foreign currency exchange rates
 
 <div>
  <img src ="https://github.com/emangamal0/BM_GradProject-My_update/assets/140431066/d98dc767-e375-4f3e-979f-1a2cb5a144ba.jpg" width="250" hight="400">
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/b91df45a-0dca-4448-a463-3819e6d9732c.jpg" width="250" hight="400" >
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/d570c869-3810-4e0d-a6fe-5614e821e722.jpg" width="250" hight="400" >
+ <img src ="https://github.com/emangamal0/BM_GradProject-My_update/assets/140431066/a7331ae1-55fc-4740-8e02-b83be4e21882.jpg" width="250" hight="400" >
 </div>
 
 <div>
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/d50c5202-e2b1-4738-bd9f-ebfa18ec3b76.jpg" width="250" hight="400">
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/2f4dcece-0405-4950-bd94-4eef236f0c59.jpg" width="250" hight="400" >
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/9b7847e7-6aa4-45eb-af6d-d8ce609951fe.jpg" width="250" hight="400" >
+ <img src ="https://github.com/emangamal0/BM_GradProject-My_update/assets/140431066/a3feba31-d487-4e30-9a20-c887a40c9310.jpg" width="250" hight="400" >
+ <img src ="https://github.com/emangamal0/BM_GradProject-My_update/assets/140431066/37a06045-64b4-4387-a53b-fa4c72754147.jpg" width="250" hight="400" > 
 </div>
 
- <div>
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/696d29b8-8964-4453-b505-1c3c4d7f8e44.jpg" width="250" hight="400">
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/e6d99b99-a3a5-4423-ac98-7befb9b25752.jpg" width="250" hight="400" >
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/abfbbd5a-79fc-4c8f-a17a-a18013fca9b3.jpg" width="250" hight="400" >
-</div>
 
  #  libraries and tools
 
