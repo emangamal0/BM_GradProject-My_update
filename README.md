@@ -28,20 +28,13 @@ ConCurrency and Check live foreign currency exchange rates
 
 
  #  libraries and tools
-
-- Media3 ExoPlayer
-- Data Binding Library
-- Flows
-- Navigation component
-- Dependency injection with Hilt
+ 
 - Room Database
 - coroutines
 - viewModel
 - Shared ViewModel
 - Retrofit
-- OkHttpClient
-- intuit
 - Coil
-- Lottie
+- Call Api
   
 ### Thanks For Reading.
