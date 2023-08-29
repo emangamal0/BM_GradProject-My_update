@@ -1,25 +1,23 @@
-# Music Player APP 
+# Currency Converter App
 
-Music Player app is a sample Android application for playing musics.
+ConCurrency and Check live foreign currency exchange rates
 
 # Architecture - MVVM 
  
 # Features 
 
-- Music Selection ➡ Browse and choose music from an API.
+-Currency Conversion
  
-- Playback Controls ➡ such as play, pause, skip, and next, enhancing the user's control over their music experience.
+- Real-Time Exchange Rates
  
-- Background Service ➡ Enable continuous music playback even when the app is minimized or the device is locked.
+- Favorite Currencies
  
-- Notifications ➡ Receive real-time notifications with track information and playback controls.
-  
-- User-Friendly Interface.
+- Currency Comparison
 
 # Sceeens
 
 <div>
- <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/88c86560-a7ae-46c0-94b6-a0849bcc8007.jpg" width="250" hight="400">
+ <img src ="https://github.com/emangamal0/BM_GradProject-My_update/assets/140431066/d98dc767-e375-4f3e-979f-1a2cb5a144ba.jpg" width="250" hight="400">
  <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/b91df45a-0dca-4448-a463-3819e6d9732c.jpg" width="250" hight="400" >
  <img src ="https://github.com/3slam/Music_Player_APP/assets/82102228/d570c869-3810-4e0d-a6fe-5614e821e722.jpg" width="250" hight="400" >
 </div>
