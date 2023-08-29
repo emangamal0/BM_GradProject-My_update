@@ -41,8 +41,7 @@ import com.example.currencyconverter.ui.CurrencyViewModel
 fun CompareCard(viewModel: CurrencyViewModel = viewModel()) {
 
     var amountCompare by remember { mutableStateOf(TextFieldValue("")) }
-    val amountCompareRes1 by viewModel.compareState.observeAsState(0.0)
-    val amountCompareRes2 by viewModel.compareState.observeAsState(0.0)
+    val amountCompareRes by viewModel.compareState.observeAsState()
 
     Column(
         modifier = Modifier
@@ -144,25 +143,12 @@ fun CompareCard(viewModel: CurrencyViewModel = viewModel()) {
             horizontalArrangement = Arrangement.SpaceBetween
         )
         {
-//            Text(
-//                text = "$amountCompareRes1", style = TextStyle(
-//                    color = Color.Black,
-//                    fontWeight = FontWeight.Bold
-//                ), modifier = Modifier
-//                    .width(170.dp)
-//                    .border(
-//                        2.dp,
-//                        MaterialTheme.colorScheme.inverseOnSurface,
-//                        shape = CircleShape
-//                    )
-//                    .padding(16.dp)
-//            )
 
-            OutlinedTextField(
-                value = "$amountCompareRes1",
-                onValueChange = {},
-                readOnly = true,
-                modifier = Modifier
+            Text(
+                text = "${amountCompareRes?.firstCurrency}", style = TextStyle(
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                ), modifier = Modifier
                     .width(170.dp)
                     .border(
                         2.dp,
@@ -172,12 +158,10 @@ fun CompareCard(viewModel: CurrencyViewModel = viewModel()) {
                     .padding(16.dp)
             )
 
-
             Spacer(modifier = Modifier.width(10.dp))
 
-
             Text(
-                text = "$amountCompareRes2",
+                text = "${amountCompareRes?.secondCurrency}",
                 style = TextStyle(
                     color = Color.Black,
                     fontWeight = FontWeight.Bold

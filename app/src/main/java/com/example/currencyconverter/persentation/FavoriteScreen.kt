@@ -60,7 +60,11 @@ fun FavoriteScreen(viewModel: CurrencyViewModel = viewModel()) {
 
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var addToList: Boolean by rememberSaveable { mutableStateOf(false) }
-    val favList = viewModel.remoteCurrencies.observeAsState()
+    val favList = viewModel.myPorotfoilList.observeAsState()
+    val remoteList=viewModel.remoteCurrencies.observeAsState().value?.map { remoteItem ->
+        val itemFavorie =favList?.value?.find { it.code== remoteItem.code}?.isFavourite ?:false
+        remoteItem.copy(isFavourite = itemFavorie)
+    }
 
     Box {
         Column(modifier = Modifier.background(color = Color.White)) {
@@ -160,7 +164,7 @@ fun FavoriteScreen(viewModel: CurrencyViewModel = viewModel()) {
                         )
 
                         LazyColumn(modifier = Modifier.background(color = Color.White)) {
-                            itemsIndexed(favList.value ?: listOf()) { index, item ->
+                            itemsIndexed(remoteList ?: listOf()) { index, item ->
                                 var checkBox: Boolean by rememberSaveable { mutableStateOf(item.isFavourite) }
                                 Row(modifier = Modifier.padding(end = 20.dp)) {
                                     AddList(item)
@@ -169,11 +173,6 @@ fun FavoriteScreen(viewModel: CurrencyViewModel = viewModel()) {
                                         onCheckedChange = {
                                             checkBox = it
                                             viewModel.saveItemInDB(item, it)
-//                                            addToList = true
-//                                             if (it)
-//                                             viewModel.saveItemInDB(item, it)
-//                                             else
-//                                             viewModel.remvoedatabase(item)
                                         },
                                         modifier = Modifier
                                             .size(30.dp)

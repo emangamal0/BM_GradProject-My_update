@@ -14,9 +14,9 @@ interface ApiService {
     suspend fun getConversionRate(@Query("from") base: String, @Query("to") target: String): ConversionRate
 
     @GET("convert")
-    suspend fun getConversionResult(@Query("from") base: String, @Query("to") target: String, @Query("value") amount: Double): ConversionResult
+    suspend fun getConversionResult(@Query("from") base: String, @Query("to") target: String, @Query("amount") amount: Double): ConversionResult
 
     @GET("compare")
-    suspend fun getCompareResult(@Query("from") base: String, @Query("to") target: List<String>, @Query("value") amount: Double): ConversionResult
+    suspend fun getCompareResult(@Query("from") base: String, @Query("to") target: String , @Query("amount") amount: Double): List<ConversionResult>
 
 }

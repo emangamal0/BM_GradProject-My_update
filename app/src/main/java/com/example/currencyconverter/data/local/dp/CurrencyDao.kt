@@ -22,4 +22,5 @@ interface CurrencyDao {
 
     @Update
     suspend fun flagItemAsFavourite(item: CachedCurrency)
+
 }

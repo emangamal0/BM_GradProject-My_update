@@ -46,38 +46,32 @@ class CurrencyViewModel() : ViewModel() {
     private val _conversionState = MutableLiveData<Double>()
     val conversionState: LiveData<Double> = _conversionState
 
-    private val _compareState = MutableLiveData<Double>()
-    val compareState: LiveData<Double> = _compareState
+    private val _compareState = MutableLiveData<CompareState>(CompareState())
+    val compareState: LiveData<CompareState> = _compareState
 
-    lateinit var  cachedCurrencies : List<CachedCurrency>
+    var  cachedCurrencies : List<CachedCurrency> = emptyList()
+
+    val myPorotfoilList =currencyRepository.getCachedCurrenciesLiveData()
+
     init {
         viewModelScope.launch {
             fetchRemoteCurrencies()
         }
-
     }
 
     suspend fun fetchRemoteCurrencies() {
-        try {
+
             val apiService = RetrofitClient.createService(ApiService::class.java)
             val currencies = apiService.getCurrencies()
             val cachedCurrencies = currencies.map { currency ->
                 CachedCurrency(currency.code, currency.desc, currency.flagUrl)
             }
             _remoteCurrencies.postValue(cachedCurrencies)
-            currencyRepository.insertCurrencies(cachedCurrencies)
-
-            Log.d("CurrencyViewModelSuccess", "Remote Data: $cachedCurrencies")
-        } catch (e: Exception) {
-            Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
-
-
-            fetchCachedCurrencies()
-        }
+            //currencyRepository.insertCurrencies(cachedCurrencies)
     }
 
     private fun fetchCachedCurrencies() {
-        cachedCurrencies = currencyRepository.getCachedCurrenciesLiveData().value!!
+        cachedCurrencies = currencyRepository.getCachedCurrenciesLiveData().value ?: emptyList()
         _remoteCurrencies.postValue(cachedCurrencies)
 
 
@@ -93,25 +87,28 @@ class CurrencyViewModel() : ViewModel() {
     }
 
     suspend fun convert(from : String, to: String, amount: Double){
-        try {
+        //try {
+        Log.i("CurrencyViewModel" , "from=$from to=$to amount=$amount")
             val apiService = RetrofitClient.createService(ApiService::class.java)
             val conversionResult = apiService.getConversionResult(from, to , amount)
             val result = conversionResult.value
             _conversionState.postValue(result)
             Log.d("eman", result.toString())
-        }catch (e: Exception) {
-            Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
-
-        }
+//        }catch (e: Exception) {
+//            Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
+//
+//        }
     }
 
     suspend fun compare(from : String, to: List<String> , amount: Double){
         try {
+            Log.i("CompareCurrencyViewModel" , "from=$from to=$to")
             val apiService = RetrofitClient.createService(ApiService::class.java)
-            val compareResult = apiService.getCompareResult(from , to ,amount)
-            val result = compareResult.value
-            _compareState.postValue(result)
-            Log.d("eman", result.toString())
+            val compareResult = apiService.getCompareResult(from , "${to[0]},${to[1]}" ,amount)
+
+            _compareState.postValue(CompareState(firstCurrency = compareResult[0].value , secondCurrency = compareResult[1].value
+            ))
+            Log.d("eman", compareResult.toString())
         }catch (e: Exception) {
             Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
         }
@@ -159,3 +156,5 @@ class CurrencyViewModel() : ViewModel() {
     }
 
 }
+
+data class CompareState(val firstCurrency :Double =0.0,val secondCurrency :Double=0.0  )
