@@ -14,7 +14,7 @@ ConCurrency and Check live foreign currency exchange rates
  
 - Currency Comparison
 
-# Sceeens
+# Screens
 
 <div>
  <img src ="https://github.com/emangamal0/BM_GradProject-My_update/assets/140431066/d98dc767-e375-4f3e-979f-1a2cb5a144ba.jpg" width="250" hight="400">
