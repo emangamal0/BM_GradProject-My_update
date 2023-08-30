@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://currency-converter-production-3e05.up.railway.app/api/currency-conversions/"
+    private const val BASE_URL = "http://ec2-3-144-40-233.us-east-2.compute.amazonaws.com:8000/api/currency-conversions/"
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)

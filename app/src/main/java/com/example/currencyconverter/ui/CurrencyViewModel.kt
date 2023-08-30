@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.currencyconverter.AppContext
@@ -14,6 +15,7 @@ import com.example.currencyconverter.data.local.dp.CurrencyDatabase
 import com.example.currencyconverter.data.remote.api.ApiService
 import com.example.currencyconverter.data.remote.api.RetrofitClient
 import com.example.currencyconverter.data.repo.CurrencyRepositoryImpl
+import com.example.currencyconverter.domain.ConversionRate
 import com.example.currencyconverter.domain.CurrencyRepository
 import com.example.currencyconverter.persentation.DropDownState
 import com.example.currencyconverter.persentation.Event
@@ -53,10 +55,16 @@ class CurrencyViewModel() : ViewModel() {
 
     val myPorotfoilList =currencyRepository.getCachedCurrenciesLiveData()
 
+    private val _favoriteRatesList = mutableStateOf<List<ConversionRate>>(emptyList())
+    val favoriteRatesList  = _favoriteRatesList
+
+    private val from = mutableStateOf("EGP")
+
     init {
         viewModelScope.launch {
             fetchRemoteCurrencies()
         }
+        updateFavorite()
     }
 
     suspend fun fetchRemoteCurrencies() {
@@ -67,7 +75,6 @@ class CurrencyViewModel() : ViewModel() {
                 CachedCurrency(currency.code, currency.desc, currency.flagUrl)
             }
             _remoteCurrencies.postValue(cachedCurrencies)
-            //currencyRepository.insertCurrencies(cachedCurrencies)
     }
 
     private fun fetchCachedCurrencies() {
@@ -87,17 +94,12 @@ class CurrencyViewModel() : ViewModel() {
     }
 
     suspend fun convert(from : String, to: String, amount: Double){
-        //try {
         Log.i("CurrencyViewModel" , "from=$from to=$to amount=$amount")
             val apiService = RetrofitClient.createService(ApiService::class.java)
             val conversionResult = apiService.getConversionResult(from, to , amount)
             val result = conversionResult.value
             _conversionState.postValue(result)
             Log.d("eman", result.toString())
-//        }catch (e: Exception) {
-//            Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
-//
-//        }
     }
 
     suspend fun compare(from : String, to: List<String> , amount: Double){
@@ -106,19 +108,35 @@ class CurrencyViewModel() : ViewModel() {
             val apiService = RetrofitClient.createService(ApiService::class.java)
             val compareResult = apiService.getCompareResult(from , "${to[0]},${to[1]}" ,amount)
 
-            _compareState.postValue(CompareState(firstCurrency = compareResult[0].value , secondCurrency = compareResult[1].value
-            ))
+            _compareState.postValue(
+                CompareState(firstCurrency = compareResult[0].value , secondCurrency = compareResult[1].value
+            )
+            )
             Log.d("eman", compareResult.toString())
         }catch (e: Exception) {
             Log.e("CurrencyViewModel", "Error fetching remote data: ${e.message}")
         }
     }
 
+    fun updateFavorite(){
+        viewModelScope.launch {
+            val list =currencyRepository.getFavoriteCurrency()
+            val apiService = RetrofitClient.createService(ApiService::class.java)
+            if (list.isNotEmpty()){
+                _favoriteRatesList.value=apiService.getConversionRate(from.value ,list)
+            }
+        }
+
+     }
+
+
     fun onEvent(event: Event){
         when(event){
             is Event.Convert -> {
                 viewModelScope.launch {
                     convert(event.from, event.to, event.amount)
+                    from.value=event.from
+                    updateFavorite()
                 }
             }
             is Event.Compare -> {

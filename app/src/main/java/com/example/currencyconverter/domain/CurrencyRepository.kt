@@ -7,4 +7,6 @@ interface CurrencyRepository {
     fun getCachedCurrenciesLiveData(): LiveData<List<CachedCurrency>>
     suspend fun insertCurrencies(currencies: List<CachedCurrency>)
     suspend fun updateCurrency(currency:CachedCurrency)
+
+    suspend fun getFavoriteCurrency() :List<String>
 }

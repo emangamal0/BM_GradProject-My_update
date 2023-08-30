@@ -11,7 +11,7 @@ interface ApiService {
     suspend fun getCurrencies(): List<Currency>
 
     @GET("rates")
-    suspend fun getConversionRate(@Query("from") base: String, @Query("to") target: String): ConversionRate
+    suspend fun getConversionRate(@Query("from") base: String, @Query("to") target: List<String>): List<ConversionRate>
 
     @GET("convert")
     suspend fun getConversionResult(@Query("from") base: String, @Query("to") target: String, @Query("amount") amount: Double): ConversionResult

@@ -3,7 +3,10 @@ package com.example.currencyconverter.persentation
 import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -30,8 +34,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.currencyconverter.R
@@ -48,7 +54,7 @@ fun CurrencyDropdown(modifier: Modifier, viewModel: CurrencyViewModel = viewMode
 
     val selectedCurrency = list.value?.get(selectedCurrencyIndex)
 
-    Card(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentSize(Alignment.TopStart)
@@ -80,32 +86,42 @@ fun CurrencyDropdown(modifier: Modifier, viewModel: CurrencyViewModel = viewMode
                 )
             }
 
-            if (expanded) {
-                Divider(modifier = Modifier.padding(start = 16.dp, end = 16.dp))
 
-                list.value?.forEachIndexed { index, cachedCurrency ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedCurrencyIndex = index
-                            expanded = false
-                            viewModel.setDropDownState(cachedCurrency.code, num)
-                        },
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        text = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                AsyncImage(
-                                    model = Uri.parse(cachedCurrency.flagUrl),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .padding(end = 8.dp)
-                                )
-                                Text(text = cachedCurrency.code)
-                            }
+                DropdownMenu(expanded=expanded ,onDismissRequest = {
+                    expanded = false
+                }) {
+                    Column(modifier= Modifier
+                        .height(200.dp)
+                        .background(Color.White)
+                        .verticalScroll(
+                            rememberScrollState()
+                        ) ,
+                    verticalArrangement = Arrangement.SpaceAround ,
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                        list.value?.forEachIndexed { index, cachedCurrency ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedCurrencyIndex = index
+                                    expanded = false
+                                    viewModel.setDropDownState(cachedCurrency.code, num)
+                                },
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                text = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        AsyncImage(
+                                            model = Uri.parse(cachedCurrency.flagUrl),
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .padding(end = 8.dp)
+                                        )
+                                        Text(text = cachedCurrency.code)
+                                    }
+                                }
+                            )
                         }
-                    )
+                    }
                 }
-            }
 
         }
     }

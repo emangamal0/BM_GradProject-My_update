@@ -10,11 +10,16 @@ class CurrencyRepositoryImpl(private val currencyDao: CurrencyDao) : CurrencyRep
             return currencyDao.getCurrenciesLiveData()
     }
 
+
     override suspend fun insertCurrencies(currencies: List<CachedCurrency>) {
         currencyDao.insertCurrencies(currencies)
     }
 
     override suspend fun updateCurrency(currency: CachedCurrency) {
         currencyDao.flagItemAsFavourite(currency)
+    }
+
+    override suspend fun getFavoriteCurrency(): List<String> {
+        return currencyDao.getFavoriteCurrencies()
     }
 }

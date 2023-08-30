@@ -8,5 +8,6 @@ data class CachedCurrency(
     @PrimaryKey val code: String,
     val desc: String,
     val flagUrl: String,
-    val isFavourite :Boolean = false
+    val isFavourite :Boolean = false,
+    //var rate :Double=0.0
 )

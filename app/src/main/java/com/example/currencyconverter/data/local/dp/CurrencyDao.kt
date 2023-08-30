@@ -17,6 +17,9 @@ interface CurrencyDao {
     @Query("SELECT * FROM currencies")
     fun getCurrenciesLiveData(): LiveData<List<CachedCurrency>>
 
+    @Query("SELECT code FROM currencies WHERE isFavourite=1")
+    suspend fun getFavoriteCurrencies() :List<String>
+
     @Query("SELECT * FROM currencies")
     suspend fun getCurrencies(): List<CachedCurrency>
 
